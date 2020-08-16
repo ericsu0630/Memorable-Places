@@ -1,7 +1,6 @@
 package com.example.memorableplaces;
 
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,6 +12,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.google.android.gms.maps.model.LatLng;
 import java.util.ArrayList;
+
 public class MainActivity extends AppCompatActivity {
 
     static ArrayList<String> myAddresses = new ArrayList<>();
@@ -50,15 +50,11 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         });
-
-
     }
-
     public void addPlace(View view){
         Intent intent = new Intent(getApplicationContext(), MapsActivity.class);
         int arraySize = myAddresses.size();
         Log.i("mainActivity arraySize",String.valueOf(arraySize));
         startActivity(intent);
     }
-
 }

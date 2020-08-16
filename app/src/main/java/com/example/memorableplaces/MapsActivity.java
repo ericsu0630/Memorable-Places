@@ -105,6 +105,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 Log.i("address",address);
                 mMap.addMarker(new MarkerOptions().position(pos).title("Saved Location").snippet(address));
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(pos, 12));
+
             }
             else{
                 if(MainActivity.myAddresses.size()>0){
@@ -147,7 +148,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         });
     }
-
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
