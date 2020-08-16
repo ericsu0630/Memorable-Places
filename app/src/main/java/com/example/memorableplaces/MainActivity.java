@@ -11,11 +11,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.google.android.gms.maps.model.LatLng;
-
 import java.util.ArrayList;
-
 public class MainActivity extends AppCompatActivity {
 
     static ArrayList<String> myAddresses = new ArrayList<>();
@@ -29,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         ListView listView = findViewById(R.id.listView);
         textView = findViewById(R.id.textView);
-        arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, myAddresses);
+        arrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, myAddresses);
         listView.setAdapter(arrayAdapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -47,6 +44,9 @@ public class MainActivity extends AppCompatActivity {
                 myPlaces.remove(position);
                 arrayAdapter.notifyDataSetChanged();
                 Toast.makeText(MainActivity.this, "Location removed", Toast.LENGTH_SHORT).show();
+                if(myPlaces.size() <= 0){
+                    textView.setVisibility(View.VISIBLE);
+                }
                 return false;
             }
         });
