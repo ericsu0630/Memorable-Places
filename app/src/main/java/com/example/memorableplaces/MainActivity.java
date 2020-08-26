@@ -50,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
                             myPlaces.clear();
                             arrayAdapter.notifyDataSetChanged();
                             textView.setVisibility(View.VISIBLE);
-                            Toast.makeText(MainActivity.this, "All locations removed", Toast.LENGTH_LONG).show();
+                            Toast.makeText(MainActivity.this, "All locations deleted", Toast.LENGTH_LONG).show();
                             break;
 
                         case DialogInterface.BUTTON_NEGATIVE: //'No' button clicked
@@ -60,11 +60,10 @@ public class MainActivity extends AppCompatActivity {
             };
 
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setIcon(android.R.drawable.ic_delete)
-                    .setTitle("Warning")
-                    .setMessage("Pressing OK wil remove all your saved locations.")
-                    .setPositiveButton("OK", dialogClickListener)
-                    .setNegativeButton("Cancel", dialogClickListener)
+            builder.setIcon(android.R.drawable.ic_menu_delete)
+                    .setTitle("Delete all saved locations?")
+                    .setPositiveButton("Yes", dialogClickListener)
+                    .setNegativeButton("No", dialogClickListener)
                     .show();
 
         }
@@ -133,7 +132,7 @@ public class MainActivity extends AppCompatActivity {
                                     Log.i("Warning","Serialization failed!");
                                 }
 
-                                Toast.makeText(MainActivity.this, "Location removed", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(MainActivity.this, "Location deleted", Toast.LENGTH_SHORT).show();
                                 if(myPlaces.size() <= 0){
                                     textView.setVisibility(View.VISIBLE);
                                 }
@@ -147,7 +146,7 @@ public class MainActivity extends AppCompatActivity {
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
                 builder.setIcon(android.R.drawable.ic_menu_delete)
-                        .setTitle("Remove this location?")
+                        .setTitle("Delete selected location?")
                         .setPositiveButton("Yes", dialogClickListener)
                         .setNegativeButton("No", dialogClickListener)
                         .show();
