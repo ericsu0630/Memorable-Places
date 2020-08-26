@@ -95,7 +95,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
             Log.i("Last Known Location", lastKnownLocation.toString());
             userLocation = new LatLng(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude());
-            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(userLocation, 12));
+            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(userLocation, 12));
             Log.i("Item clicked",String.valueOf(itemClicked));
             LatLng pos;
             String address;
