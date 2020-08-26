@@ -72,11 +72,10 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         switch (which){
-                            case DialogInterface.BUTTON_POSITIVE: //Yes button clicked
+                            case DialogInterface.BUTTON_POSITIVE: //'Yes' button clicked
                                 myAddresses.remove(pos);
                                 myPlaces.remove(pos);
                                 arrayAdapter.notifyDataSetChanged();
-
                                 try {
                                     //encode all data and save to shared preferences
                                     String encodedString = ObjectSerializer.serialize(MainActivity.myAddresses);
@@ -94,15 +93,18 @@ public class MainActivity extends AppCompatActivity {
                                 }
                                 break;
 
-                            case DialogInterface.BUTTON_NEGATIVE: //No button clicked
+                            case DialogInterface.BUTTON_NEGATIVE: //'No' button clicked
                                 break;
                         }
                     }
                 };
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
-                builder.setMessage("Remove this location?").setPositiveButton("Yes", dialogClickListener)
-                        .setNegativeButton("No", dialogClickListener).show();
+                builder.setIcon(android.R.drawable.ic_menu_delete)
+                        .setTitle("Remove this location?")
+                        .setPositiveButton("Yes", dialogClickListener)
+                        .setNegativeButton("No", dialogClickListener)
+                        .show();
 
                 return true;
             }
