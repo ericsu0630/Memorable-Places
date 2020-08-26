@@ -23,8 +23,6 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -113,6 +111,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
             }
             else{ //If the floating '+' button is clicked
+                Toast.makeText(getApplicationContext(), "Long press on map to save location", Toast.LENGTH_LONG).show();
                 if(MainActivity.myAddresses.size()>0){
                     for(int i=0;i<MainActivity.myAddresses.size();i++){
                         latlong = MainActivity.myPlaces.get(i).split(",");
@@ -150,16 +149,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 googleMap.addMarker(new MarkerOptions().position(latLng).title("Saved Location").snippet(address)); //add a marker on map
                 MainActivity.myPlaces.add(latLng.latitude + "," +latLng.longitude);//add the location data to the array list
                 MainActivity.myAddresses.add(address);//add the address to the array list
-//                try {
-//                    //encode all data and save to shared preferences
-//                    encodedString = ObjectSerializer.serialize(MainActivity.myAddresses);
-//                    MainActivity.savedData.edit().putString("addresses", encodedString).apply();
-//                    encodedString = ObjectSerializer.serialize(MainActivity.myPlaces);
-//                    MainActivity.savedData.edit().putString("places", encodedString).apply();
-//                }catch(Exception e){
-//                    e.printStackTrace();
-//                    Log.i("Warning","Serialization failed!");
-//                }
+
+                try {
+                    //encode all data and save to shared preferences
+                    encodedString = ObjectSerializer.serialize(MainActivity.myAddresses);
+                    MainActivity.savedData.edit().putString("addresses", encodedString).apply();
+                    encodedString = ObjectSerializer.serialize(MainActivity.myPlaces);
+                    MainActivity.savedData.edit().putString("places", encodedString).apply();
+                }catch(Exception e){
+                    e.printStackTrace();
+                    Log.i("Warning","Serialization failed!");
+                }
+
                 MainActivity.arrayAdapter.notifyDataSetChanged(); //update the address arrayAdapter
                 MainActivity.textView.setVisibility(View.GONE); //hides the 'nothing to show' text view
                 Toast.makeText(getApplicationContext(), "Location saved", Toast.LENGTH_SHORT).show();
