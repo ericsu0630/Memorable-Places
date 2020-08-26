@@ -1,5 +1,6 @@
 package com.example.memorableplaces;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import android.content.Context;
@@ -8,6 +9,9 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -25,11 +29,53 @@ public class MainActivity extends AppCompatActivity {
     static SharedPreferences savedData;
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater menuInflater = getMenuInflater();
+        menuInflater.inflate(R.menu.main_menu,menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        super.onOptionsItemSelected(item);
+        if(item.getItemId()==R.id.clear_locations){
+
+            DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    switch (which){
+                        case DialogInterface.BUTTON_POSITIVE: //'Yes' button clicked
+                            savedData.edit().clear().apply();
+                            myAddresses.clear();
+                            myPlaces.clear();
+                            arrayAdapter.notifyDataSetChanged();
+                            textView.setVisibility(View.VISIBLE);
+                            Toast.makeText(MainActivity.this, "All locations removed", Toast.LENGTH_LONG).show();
+                            break;
+
+                        case DialogInterface.BUTTON_NEGATIVE: //'No' button clicked
+                            break;
+                    }
+                }
+            };
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setIcon(android.R.drawable.ic_delete)
+                    .setTitle("Warning")
+                    .setMessage("Pressing OK wil remove all your saved locations.")
+                    .setPositiveButton("OK", dialogClickListener)
+                    .setNegativeButton("Cancel", dialogClickListener)
+                    .show();
+
+        }
+        return true;
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         savedData = this.getSharedPreferences("com.example.memorableplaces", Context.MODE_PRIVATE);
-        //savedData.edit().clear().apply();
         ListView listView = findViewById(R.id.listView);
         textView = findViewById(R.id.textView);
 

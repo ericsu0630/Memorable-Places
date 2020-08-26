@@ -2,4 +2,5 @@
     <string name="app_name">My Places</string>
     <string name="title_activity_maps">Map</string>
     <string name="no_saved_addresses">Press + to add a location</string>
+    <string name="clear_locations">Remove all locations</string>
 </resources>
