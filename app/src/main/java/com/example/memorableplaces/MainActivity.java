@@ -29,24 +29,19 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         savedData = this.getSharedPreferences("com.example.memorableplaces", Context.MODE_PRIVATE);
+        //savedData.edit().clear().apply();
         ListView listView = findViewById(R.id.listView);
         textView = findViewById(R.id.textView);
 
         try { //decode saved data and save to array lists
-            String addresses = savedData.getString("addresses", "empty");
-            String places = savedData.getString("places", "empty");
-            if(addresses.equals("empty") || places.equals("empty") ){
-                myAddresses = new ArrayList<>();
-                myPlaces  = new ArrayList<>();
-            }
-            else{
-                myAddresses = (ArrayList<String>) ObjectSerializer.deserialize(addresses);
-                myPlaces = (ArrayList<String>) ObjectSerializer.deserialize(places);
-                if(myPlaces.size()==0 && myAddresses.size()==0) {
-                    textView.setVisibility(View.VISIBLE);
-                }else{
-                    textView.setVisibility(View.GONE);
-                }
+            String addresses = savedData.getString("addresses", ObjectSerializer.serialize(new ArrayList<String>()));
+            String places = savedData.getString("places", ObjectSerializer.serialize(new ArrayList<String>()));
+            myAddresses = (ArrayList<String>) ObjectSerializer.deserialize(addresses);
+            myPlaces = (ArrayList<String>) ObjectSerializer.deserialize(places);
+            if(myAddresses.size()==0) {
+                textView.setVisibility(View.VISIBLE);
+            }else{
+                textView.setVisibility(View.GONE);
             }
         }catch(Exception e){
             e.printStackTrace();
