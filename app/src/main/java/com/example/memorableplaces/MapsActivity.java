@@ -23,6 +23,8 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -32,6 +34,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     LocationManager locationManager;
     LocationListener locationListener;
     Location lastKnownLocation;
+    String encodedString;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,8 +101,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             Log.i("Item clicked",String.valueOf(itemClicked));
             LatLng pos;
             String address;
-            if(itemClicked != -1){
-                pos = MainActivity.myPlaces.get(itemClicked);
+            String[] latlong;
+            if(itemClicked != -1){ //If a list item is clicked
+                latlong = MainActivity.myPlaces.get(itemClicked).split(",");
+                pos = new LatLng(Double.parseDouble(latlong[0]), Double.parseDouble(latlong[1]));
                 address = MainActivity.myAddresses.get(itemClicked);
                 Log.i("pos",pos.toString());
                 Log.i("address",address);
@@ -107,10 +112,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(pos, 12));
 
             }
-            else{
+            else{ //If the floating '+' button is clicked
                 if(MainActivity.myAddresses.size()>0){
                     for(int i=0;i<MainActivity.myAddresses.size();i++){
-                        pos = MainActivity.myPlaces.get(i);
+                        latlong = MainActivity.myPlaces.get(i).split(",");
+                        pos = new LatLng(Double.parseDouble(latlong[0]), Double.parseDouble(latlong[1]));
                         address = MainActivity.myAddresses.get(i);
                         mMap.addMarker(new MarkerOptions().position(pos).title("Saved Location").snippet(address));
                     }
@@ -121,29 +127,41 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION},0);
         }
 
+        //Long click on location to add place
         mMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
             @Override
             public void onMapLongClick(LatLng latLng) {
                 String address = "";
                 Geocoder geocoder = new Geocoder(getApplicationContext(), Locale.getDefault());
                 try {
+                    //gets all addresses associated with the location and store them in a list
                     List<Address> listOfAddresses = geocoder.getFromLocation(latLng.latitude,latLng.longitude,1);
                     if(listOfAddresses != null && listOfAddresses.size() > 0){
-
+                        //if at least one address exists, use the first one
                         Log.i("Address",listOfAddresses.get(0).toString());
                         if(listOfAddresses.get(0).getAddressLine(0) != null){
-                            address += listOfAddresses.get(0).getAddressLine(0);
+                            address = listOfAddresses.get(0).getAddressLine(0);
                         }
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
                     address = "Unknown address";
                 }
-                googleMap.addMarker(new MarkerOptions().position(latLng).title("Saved Location").snippet(address));
-                MainActivity.myPlaces.add(latLng);
-                MainActivity.myAddresses.add(address);
-                MainActivity.arrayAdapter.notifyDataSetChanged();// update arrayAdapter
-                MainActivity.textView.setVisibility(View.GONE);
+                googleMap.addMarker(new MarkerOptions().position(latLng).title("Saved Location").snippet(address)); //add a marker on map
+                MainActivity.myPlaces.add(latLng.latitude + "," +latLng.longitude);//add the location data to the array list
+                MainActivity.myAddresses.add(address);//add the address to the array list
+//                try {
+//                    //encode all data and save to shared preferences
+//                    encodedString = ObjectSerializer.serialize(MainActivity.myAddresses);
+//                    MainActivity.savedData.edit().putString("addresses", encodedString).apply();
+//                    encodedString = ObjectSerializer.serialize(MainActivity.myPlaces);
+//                    MainActivity.savedData.edit().putString("places", encodedString).apply();
+//                }catch(Exception e){
+//                    e.printStackTrace();
+//                    Log.i("Warning","Serialization failed!");
+//                }
+                MainActivity.arrayAdapter.notifyDataSetChanged(); //update the address arrayAdapter
+                MainActivity.textView.setVisibility(View.GONE); //hides the 'nothing to show' text view
                 Toast.makeText(getApplicationContext(), "Location saved", Toast.LENGTH_SHORT).show();
             }
         });
